@@ -579,6 +579,7 @@ func (c *Controller) syncSparkApplication(key string) error {
 		if !shouldRetry(appCopy) {
 			// App will never be retried. Move to terminal FailedState.
 			appCopy.Status.AppState.State = v1beta2.FailedState
+			appCopy.Status.TerminationTime = metav1.Now()
 			c.recordSparkApplicationEvent(appCopy)
 		} else if isNextRetryDue(appCopy.Spec.RestartPolicy.OnSubmissionFailureRetryInterval, appCopy.Status.SubmissionAttempts, appCopy.Status.LastSubmissionAttemptTime) {
 			if c.validateSparkResourceDeletion(appCopy) {

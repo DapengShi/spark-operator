@@ -321,6 +321,8 @@ func TestSyncSparkApplication_SubmissionFailed(t *testing.T) {
 	updatedApp, err = ctrl.crdClient.SparkoperatorV1beta2().SparkApplications(app.Namespace).Get(context.TODO(), app.Name, metav1.GetOptions{})
 	assert.Nil(t, err)
 	assert.Equal(t, v1beta2.FailedState, updatedApp.Status.AppState.State)
+	// verify the termination time is not zero
+	assert.True(t, !updatedApp.Status.TerminationTime.IsZero())
 	// No more submission attempts made.
 	assert.Equal(t, int32(2), updatedApp.Status.SubmissionAttempts)
 }
